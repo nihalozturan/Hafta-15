@@ -1,0 +1,62 @@
+SELECT     alinan_sut.musteri_kodu, alinan_sut.sut_tutar, verilen_urun.urun_tutar
+FROM       alinan_sut 
+INNER JOIN verilen_urun 
+ON alinan_sut.musteri_kodu = verilen_urun.musteri_kodu
+
+
+
+
+SELECT verilen_urun.musteri_kodu , verilen_urun.urun_tutar,verilen_para
+FROM     verilen_urun
+INNER JOIN para
+ON  para.musteri_kodu = verilen_urun.musteri_kodu
+
+
+
+
+SELECT verilen_urun.musteri_kodu ,sum(urun_tutar),sum(verilen_para)
+FROM    para
+INNER JOIN verilen
+ON  para.musteri_kodu = verilen_urun.musteri_kodu
+GROUP BY verilen_urun.musteri_kodu
+ORDER BY SUM (verilen_para) DESC; //order by kısmına da sum yazılır
+
+
+
+CREATE PROCEDURE hizala
+AS
+BEGIN
+
+       SELECT verilen_urun.musteri_kodu ,sum(urun_tutar),sum(verilen_para)
+       FROM     verilen_urun
+       INNER JOIN para
+       ON  para.musteri_kodu = verilen_urun.musteri_kodu
+       GROUP BY verilen_urun.musteri_kodu
+       ORDER BY SUM (verilen_para) DESC; 
+END
+
+
+ SELECT verilen_urun.musteri_kodu ,sum(urun_tutar),sum(verilen_para)
+       FROM    verilen_urun
+       INNER JOIN para
+       ON  para.musteri_kodu = verilen_urun.musteri_kodu
+		where para.musteri_kodu=203
+       GROUP BY verilen_urun.musteri_kodu
+       ORDER BY SUM (verilen_para) DESC; 
+
+
+
+CREATE PROCEDURE hizala2 @kod int
+AS
+BEGIN
+ SELECT verilen_urun.musteri_kodu ,sum(urun_tutar),sum(verilen_para)
+       FROM    para
+        INNER JOIN verilen_urun
+        ON  para.musteri_kodu = verilen_urun.musteri_kodu
+		where para.musteri_kodu=@kod
+        GROUP BY verilen_urun.musteri_kodu
+        ORDER BY SUM (verilen_para) DESC; 
+END
+
+
+EXEC hizala2 203
